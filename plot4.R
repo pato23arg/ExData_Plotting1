@@ -1,0 +1,20 @@
+household_power_consumption <- read.table("C:/Users/pv532f/Desktop/R&D/DataScience/Exploratory Data Analysis/project1/household_power_consumption.txt", sep=";", quote="\"", na.strings="?")
+new_household_power <- subset.data.frame(household_power_consumption, household_power_consumption$V1 == "1/2/2007" | household_power_consumption$V1 == "2/2/2007")
+names(new_household_power) <- c("Date", "Time", "Global_active_power", "Global_reactive_power", "Voltage Global_intensity", "Sub_metering_1", "Sub_metering_2", "Sub_metering_3")
+GAP_list <- as.numeric(as.character(new_household_power$Global_active_power))
+
+char_date <- paste(new_household_power$Date, new_household_power$Time)
+DateTime <- strptime(char_date, "%d/%m/%Y %H:%M:%S")
+
+
+png(file = "plot4.png", width = 480, height = 480, units = "px")
+par(mfrow = c(2, 2))
+par(mar = c(5, 4, 2, 2))
+plot(x = DateTime, y = GAP_list, main = "", ylab = "Global Active Power(kilowatts)", xlab = "", type="l")
+plot(x = DateTime, y = as.numeric(as.character(new_household_power$Voltage)), main = "", ylab = "Voltage", xlab = "datetime", type="l")
+plot(x = DateTime, y = new_household_power$Sub_metering_1, main = "", ylab = "Energy sub metering", xlab = "", type="l")
+lines(x = DateTime, y = as.numeric(as.character(new_household_power$Sub_metering_2)), col = "Red")
+lines(x = DateTime, y = as.numeric(as.character(new_household_power$Sub_metering_3)), col = "Blue")
+legend('topright', names(new_household_power[7:9]), col=c("Black", "Red", "Blue"), lty=1, bty='n')
+plot(x = DateTime, y = as.numeric(as.character(new_household_power$Global_reactive_power)), main = "", ylab = "Global_reactive_power", xlab = "datetime", type="l")
+dev.off()
